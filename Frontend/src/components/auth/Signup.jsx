@@ -1,22 +1,25 @@
-import { useState } from "react";
 import { FaGithub } from "react-icons/fa";
 import axios from 'axios';
 import { useForm } from "react-hook-form"
 import z from 'zod'
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../AuthProvider.jsx";
 
 const signupSchema = z.object({
 
     username: z.string()
         .min(3, "username must be at least 3 character"),
 
-    email: z.string().min(3,"Enter valid email"),
+    email: z.string().min(3, "Enter valid email"),
 
     password: z.string().min(8, "Password must be 8 character"),
 
 })
 
 export const Signup = () => {
+    const navigate = useNavigate();
+    const { setCurrentUser } = useAuth();
 
     const {
         register,
@@ -28,16 +31,16 @@ export const Signup = () => {
     console.log("re-render");
 
     const onSubmit = async (data) => {
-       
+
         console.log(data);
         try {
-            const result = await axios.post(`${import.meta.env.VITE_URL}/signup`, data,{withCredentials:true});
-            console.log(result.data.message);
-            
-             localStorage.setItem({"token":result.token})
-             localStorage.setItem({"userId":result.userId})
+            const result = await axios.post(`${import.meta.env.VITE_URL}/signup`, data, { withCredentials: true });
+            localStorage.setItem("token", result.data.token);
+            localStorage.setItem("userId", result.data.userId);
+            setCurrentUser(result.data.userId);
+            navigate("/");
         } catch (error) {
-            console.log('Error while Creating signup',error);
+            console.log('Error while Creating signup', error);
 
         }
     };
@@ -80,9 +83,9 @@ export const Signup = () => {
               focus:border-blue-500"
                         />
                     </div>
-                     <p className="text-gray-500 text-xs mt-2">
-                           {errors?.username?.message}
-                        </p>
+                    <p className="text-gray-500 text-xs mt-2">
+                        {errors?.username?.message}
+                    </p>
 
 
                     <div>
@@ -99,9 +102,9 @@ export const Signup = () => {
               focus:border-blue-500"
                         />
                     </div>
-                     <p className="text-gray-500 text-xs mt-2">
-                           {errors?.email?.message}
-                        </p>
+                    <p className="text-gray-500 text-xs mt-2">
+                        {errors?.email?.message}
+                    </p>
 
                     <div>
                         <label className="block text-white text-sm mb-2">
@@ -117,7 +120,7 @@ export const Signup = () => {
               focus:border-blue-500"
                         />
                         <p className="text-gray-500 text-xs mt-2">
-                           {errors?.password?.message}
+                            {errors?.password?.message}
                         </p>
                     </div>
 

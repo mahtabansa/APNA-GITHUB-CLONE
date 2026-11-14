@@ -30,3 +30,6 @@ node_modules/
 .env
 .env.*
 !.env.example
+
+src/components/dashboard/tempOverlay.jsx
+src/components/dashboard/Sidebar.jsx

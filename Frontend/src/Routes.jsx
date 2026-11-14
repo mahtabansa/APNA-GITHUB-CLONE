@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Dashboard } from './components/dashboard/Dashboard'
+import {Dashboard}  from './components/dashboard/Dashboard.jsx'
 import { Profile } from './components/user/Profile'
 import { Signup } from './components/auth/Signup'
 import { Login } from './components/auth/Login'

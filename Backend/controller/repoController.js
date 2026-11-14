@@ -34,12 +34,7 @@ export const createRepository = async (req, res) => {
 
 export const getAllRepository = async (req, res) => {
   try {
-    const repo = await Repository.findOne({})
-      .populate("owner")
-      .populate("issues");
-    if (!repo) {
-      return res.status(404).json({ message: "repository not found" });
-    }
+    const repo = await Repository.find({});
     res.json(repo);
   } catch (error) {
     console.error("error while fetch repository", error);
@@ -83,10 +78,6 @@ export const fetchRespositoresForCurrentUser = async (req, res) => {
   const id = req.params.userID;
   try {
     const repo = await Repository.find({ owner: id });
-    console.log("repo",repo);
-    if (!repo || repo.legth == 0) {
-      return res.status(404).json({ message: "repository not found" });
-    }
     return res.json(repo);
   } catch (error) {
     console.error("Error while fetching repository for current user");

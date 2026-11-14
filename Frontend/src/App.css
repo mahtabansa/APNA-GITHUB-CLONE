@@ -17,6 +17,13 @@ body {
       align-items: center;
       gap: 10px;
  }
+  .navbar-container .navbar-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border:gray
+ }
+
  .navbar-container .navbar-left .hmbm-glogo {
       display: flex;
       align-items: center;

@@ -66,10 +66,6 @@ async function StartServer() {
   const port = process.env.PORT || 3000;
   const server = http.createServer(app);
 
-  app.use(bodyParser.json());
-  app.use(express.json());
-  app.use(express.urlencoded({ extended: true }));
-
   app.use(
     cors({
       origin: "http://localhost:5173",
@@ -77,6 +73,11 @@ async function StartServer() {
       methods: ["GET", "POST", "PUT", "DELETE"],
     }),
   );
+  
+  app.use(express.json());
+
+  app.use(bodyParser.json());
+  app.use(express.urlencoded({ extended: true }));
   app.use(mainRouter);
 
   const io = new Server(server, {

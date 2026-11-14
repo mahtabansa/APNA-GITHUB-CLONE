@@ -39,7 +39,7 @@ export const signUp = async (req, res) => {
       },
     );
 
-    res.send({"token":token,"userId":user.insertedId});
+    res.send({ token: token, userId: user.insertedId });
   } catch (err) {
     console.error("Error while signup ", err);
     res.status(500).json({ message: err });
@@ -48,15 +48,16 @@ export const signUp = async (req, res) => {
 
 export const login = async (req, res) => {
   try {
-    const { username, email,password } = req.body;
-    console.log("username",username,email);
-
     await client.connect();
-    const db = client.db("gitHubClone");
-    const userCollections = db.collection("users");
-   
-    const user = await userCollections.findOne({ username:username });
-    console.log("user",user);
+    const dbName = "gitHubClone";
+    const db = client.db(dbName);
+    const userCollection = db.collection("users");
+
+    const { email, password } = req.body;
+
+    let user = await userCollection.findOne({ email: email });
+
+    console.log("user", user);
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(404).json({ message: "Invalid credentials" });
@@ -65,7 +66,7 @@ export const login = async (req, res) => {
       expiresIn: "24h",
     });
 
-    res.status(200).json({"token":token,"userId":user._id});
+    res.status(200).json({ token: token, userId: user._id });
   } catch (err) {
     res.status(400).json({ message: err });
     console.log("invalid username and password");

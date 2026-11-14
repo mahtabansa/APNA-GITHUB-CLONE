@@ -1,35 +1,32 @@
 import React from 'react'
-import { useState } from 'react';
-import zod, { email } from 'zod';
 import { FaGithub } from "react-icons/fa";
 import axios from 'axios';
-import z from 'zod'
+import z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../AuthProvider.jsx';
 
 const loginSchema = z.object({
-   username:z.string().min(3,"please enter valid username or email"),
+   email:z.string().min(3,"please enter valid username or email"),
    password:z.string().min(8,"enter valid password")
 })
 
 export const Login = () => {
-  const [currentUser,setCurrentUser] = useState();
-const {register,handleSubmit,formState:{errors,isSubmitting}} = useForm({
-  resolver:zodResolver(loginSchema)
-})
- 
+  const navigate = useNavigate();
+  const { setCurrentUser } = useAuth();
+  const {register,handleSubmit,formState:{errors,isSubmitting}} = useForm({
+    resolver:zodResolver(loginSchema)
+  });
 
-    const onSubmit = async (data) => {
+    const onSubmit = async(data) => {
        
-        console.log(data);
         try {
             const result = await axios.post(`${import.meta.env.VITE_URL}/auth`, data,{withCredentials:true});
-            console.log("result",result);
-            
              localStorage.setItem("token",result.data.token);
              localStorage.setItem("userId",result.data.userId);
-             setCurrentUser(result.data);
+             setCurrentUser(result.data.userId);
+             navigate("/");
         } catch (error) {
             console.log('Error while login',error);
 
@@ -60,15 +57,15 @@ const {register,handleSubmit,formState:{errors,isSubmitting}} = useForm({
             </label>
             <input
               type="text"
-              name="username"
-              {...register("username")}
+              name="email"
+              {...register("email")}
               placeholder="Enter username or email"
               className="w-full bg-[#0d1117] border border-[#30363d]
                  rounded-md px-3 py-2 text-white outline-none
                  focus:border-blue-500"
             />
           <p className="text-gray-500 text-xs mt-2">
-            {errors?.username?.message}
+            {errors?.email?.message}
             </p>
           </div>
 
